@@ -6,12 +6,11 @@ require 'dm/soap/adapter/version'
 Gem::Specification.new do |spec|
   spec.name          = "dm-soap-adapter"
   spec.version       = Dm::Soap::Adapter::VERSION
-  spec.authors       = ["TODO: Write your name"]
-  spec.email         = ["TODO: Write your email address"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
-  spec.homepage      = ""
-  spec.license       = "MIT"
+  spec.authors       = ["Brandon Cox"]
+  spec.email         = ["bcox@anypresence.com"]
+  spec.summary       = "DM adapter for SOAP based data sources."
+  spec.description   = s.summary
+  spec.homepage      = "https://github.com/AnyPresence/dm-soap-adapter"
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
