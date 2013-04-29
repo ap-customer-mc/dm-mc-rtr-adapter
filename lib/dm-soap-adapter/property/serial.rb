@@ -1,4 +1,4 @@
-module SalesforceAdapter::Property
+module SOAPAdapter::Property
   class Serial < ::DataMapper::Property::String
     accept_options :serial
     serial true

@@ -1,4 +1,4 @@
-equire 'dm-soap-adapter/connection/errors'
+require 'dm-soap-adapter/connection/errors'
 
 class SOAPAdapter
   class Connection

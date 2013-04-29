@@ -19,12 +19,12 @@ class SOAPAdapter
         raise Errno::ENOENT, "Could not find the WSDL at #{wsdl_path}"
       end
 
+      require "fileutils"
       FileUtils.mkdir_p(wsdl_api_dir)
 
       generate_files unless files_exist?
 
       $:.push wsdl_api_dir
-      require "#{module_name}Driver"
       $:.delete wsdl_api_dir
     end
 

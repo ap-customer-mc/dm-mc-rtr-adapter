@@ -1,4 +1,4 @@
-module SalesforceAdapter::Property
+module SOAPAdapter::Property
   class Boolean < ::DataMapper::Property::Integer
     FALSE = 0
     TRUE  = 1

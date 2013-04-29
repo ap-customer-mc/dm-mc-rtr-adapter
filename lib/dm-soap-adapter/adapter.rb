@@ -1,5 +1,4 @@
 class SOAPAdapter
-  include SQL
 
   def initialize(name, uri_or_options)
     super
