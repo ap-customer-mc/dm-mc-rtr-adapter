@@ -12,4 +12,5 @@ group :test do
   gem 'ParseTree',                  :require => 'parse_tree'
   gem 'dm-sweatshop'
   gem 'dm-sqlite-adapter'
+  gem 'soap4r', :git => 'git://github.com/felipec/soap4r.git'
 end
