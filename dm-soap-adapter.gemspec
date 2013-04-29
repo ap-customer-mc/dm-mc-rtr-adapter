@@ -15,7 +15,14 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
-
+  
+  spec.add_dependency "httpclient",     "= 2.1.5.2"
+  spec.add_dependency "data_objects",   "~> 0.10.6"
+  spec.add_dependency "dm-core",        ">= 1.1.0", "< 1.3.0"
+  spec.add_dependency "dm-validations", ">= 1.1.0", "< 1.3.0"
+  spec.add_dependency "dm-types",       ">= 1.1.0", "< 1.3.0"
+  
+      
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
 end
