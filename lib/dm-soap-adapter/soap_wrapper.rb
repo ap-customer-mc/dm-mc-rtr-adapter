@@ -6,14 +6,9 @@ class SOAPAdapter
 
     def initialize(module_name, driver_name, wsdl_path, api_dir)
       @module_name, @driver_name, @wsdl_path, @api_dir = module_name, driver_name, File.expand_path(wsdl_path), File.expand_path(api_dir)
-      generate_soap_classes
-      driver
     end
 
-    def driver
-      @driver ||= Object.const_get(module_name).const_get(driver_name).new
-    end
-
+      
     def generate_soap_classes
       unless File.file?(wsdl_path)
         raise Errno::ENOENT, "Could not find the WSDL at #{wsdl_path}"
