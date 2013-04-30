@@ -15,10 +15,9 @@ class SOAPAdapter
       end
     end
 
-    def initialize(username, password, wsdl_path, api_dir, organization_id = nil)
-      @wrapper = SoapWrapper.new("SalesforceAPI", "Soap", wsdl_path, api_dir)
-      @username, @password, @organization_id = URI.unescape(username), password, organization_id
-      login
+    def initialize(username, password, wsdl_path, api_dir)
+      @wrapper = SoapWrapper.new("GenericAPI", "SOAP", wsdl_path, api_dir)
+      @username, @password = URI.unescape(username), password
     end
     attr_reader :user_id, :user_details
 
@@ -30,12 +29,8 @@ class SOAPAdapter
       @wrapper.api_dir
     end
 
-    def organization_id
-      @user_details && @user_details.organizationId
-    end
-
     def make_object(klass_name, values)
-      obj = SalesforceAPI.const_get(klass_name).new
+      obj = ::GenericAPI.const_get(klass_name).new
       values.each do |property, value|
         field = field_name_for(klass_name, property)
         if value.nil? or value == ""
@@ -48,10 +43,13 @@ class SOAPAdapter
     end
 
     def field_name_for(klass_name, column)
-      klass = SalesforceAPI.const_get(klass_name)
+      require 'debugger'
+      debugger
+      klass = Object.const_get(klass_name)
       fields = [column, Inflector.camelize(column.to_s), "#{Inflector.camelize(column.to_s)}__c", "#{column}__c".downcase]
       options = /^(#{fields.join("|")})$/i
-      matches = klass.instance_methods(false).grep(options)
+      matches = []
+      klass.instance_methods.each{ |x| if fields.include? x.to_s then matches << x end }
       if matches.any?
         matches.first
       else
@@ -92,30 +90,8 @@ class SOAPAdapter
     private
 
     def driver
+      #puts 'driver'
       @wrapper.driver
-    end
-
-    def login
-      driver
-      if @organization_id
-        driver.headerhandler << HeaderHandler.new("LoginScopeHeader", :organizationId => @organization_id)
-      end
-
-      begin
-        result = driver.login(:username => @username, :password => @password).result
-      rescue SOAP::FaultError => error
-        case error.faultcode.text
-        when "sf:INVALID_LOGIN" then raise LoginFailed, error.faultstring.text
-        # ...
-        else raise error
-        end
-      end
-      driver.endpoint_url = result.serverUrl
-      driver.headerhandler << HeaderHandler.new("SessionHeader", "sessionId" => result.sessionId)
-      driver.headerhandler << HeaderHandler.new("CallOptions", "client" => "client")
-      @user_id = result.userId
-      @user_details = result.userInfo
-      driver
     end
 
     def call_api(method, exception_class, message, args)
