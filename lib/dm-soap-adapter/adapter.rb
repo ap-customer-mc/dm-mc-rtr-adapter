@@ -131,8 +131,6 @@ class SOAPAdapter
 
     sql = "SELECT #{fields} from #{query.model.storage_name(repository.name)}"
     sql << " WHERE (#{conditions})" unless conditions.empty?
-    sql << " ORDER BY #{order(query.order[0])}" unless query.order.nil? or query.order.empty?
-    sql << " LIMIT #{query.limit}" if query.limit
 
     DataMapper.logger.debug sql if DataMapper.logger
 

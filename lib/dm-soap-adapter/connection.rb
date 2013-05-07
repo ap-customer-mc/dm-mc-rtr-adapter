@@ -43,8 +43,6 @@ class SOAPAdapter
     end
 
     def field_name_for(klass_name, column)
-      require 'debugger'
-      debugger
       klass = Object.const_get(klass_name)
       fields = [column, Inflector.camelize(column.to_s), "#{Inflector.camelize(column.to_s)}__c", "#{column}__c".downcase]
       options = /^(#{fields.join("|")})$/i
@@ -90,7 +88,6 @@ class SOAPAdapter
     private
 
     def driver
-      #puts 'driver'
       @wrapper.driver
     end
 
@@ -108,7 +105,7 @@ class SOAPAdapter
 
     def with_reconnection(&block)
       yield
-    rescue SOAP::FaultError => error
+      rescue SOAP::FaultError => error
       retry_count ||= 0
 
       case error.faultcode.text

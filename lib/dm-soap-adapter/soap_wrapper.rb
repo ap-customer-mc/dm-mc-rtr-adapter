@@ -6,8 +6,22 @@ class SOAPAdapter
 
     def initialize(module_name, driver_name, wsdl_path, api_dir)
       @module_name, @driver_name, @wsdl_path, @api_dir = module_name, driver_name, File.expand_path(wsdl_path), File.expand_path(api_dir)
+      generate_soap_classes
+      driver
     end
 
+    def driver
+      return @driver if @driver
+      
+      require 'wsdl/soap/wsdl2ruby'
+      factory = SOAP::WSDLDriverFactory.new(wsdl_path)
+      class_name_creator = WSDL::SOAP::ClassNameCreator.new
+
+      eval(WSDL::SOAP::ClassDefCreator.new(factory.wsdl, class_name_creator, @module_name).dump, TOPLEVEL_BINDING)
+      eval(WSDL::SOAP::MappingRegistryCreator.new(factory.wsdl, class_name_creator, @module_name).dump, TOPLEVEL_BINDING)
+
+      @driver ||= factory.create_rpc_driver
+    end
       
     def generate_soap_classes
       unless File.file?(wsdl_path)
@@ -18,7 +32,7 @@ class SOAPAdapter
       FileUtils.mkdir_p(wsdl_api_dir)
 
       generate_files unless files_exist?
-
+      #generate_files
       $:.push wsdl_api_dir
       $:.delete wsdl_api_dir
     end
@@ -26,21 +40,24 @@ class SOAPAdapter
     # Good candidate for shipping out into a Rakefile.
     def generate_files
       require 'wsdl/soap/wsdl2ruby'
-
       wsdl2ruby          = WSDL::SOAP::WSDL2Ruby.new
       wsdl2ruby.logger   = $LOG if $LOG
       wsdl2ruby.location = wsdl_path
       wsdl2ruby.basedir  = wsdl_api_dir
 
+      require 'debugger'
+      debugger
+      
       wsdl2ruby.opt.merge!({
         'classdef'         => module_name,
         'module_path'      => module_name,
+        'standalone_server_stub' => module_name,
         'mapping_registry' => nil,
         'driver'           => nil,
         'client_skelton'   => nil,
       })
-
       wsdl2ruby.run
+      
 
       raise ClassesFailedToGenerate unless files_exist?
     end
