@@ -1,25 +1,81 @@
-<definitions name="SampleService" targetNamespace="http://localhost:5001/wsdl/SampleService.wsdl"
+<definitions name="SampleService" targetNamespace="http://localhost:5001/sample-service?WSDL"
     xmlns="http://schemas.xmlsoap.org/wsdl/"
     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-    xmlns:tns="http://localhost:5001/wsdl/SampleService.wsdl"
+    xmlns:tns="http://localhost:5001/sample-service?WSDL"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
  
-    <message name="SampleRequest">
-        <part name="firstName" type="xsd:string"/>
-    </message>
+    <message name="Address">
+        <part name="id" type="xsd:string"/>
+        <part name="name" type="xsd:string"/>
+        <part name="description" type="xsd:string"/>
+        <part name="fax" type="xsd:string"/>
+        <part name="phone" type="xsd:string"/>
+        <part name="type" type="xsd:string"/>
+        <part name="website" type="xsd:string"/>
+    </message>        
+
+    
     <message name="SampleResponse">
         <part name="greeting" type="xsd:string"/>
     </message>
-    <portType name="Sample_PortType">
-        <operation name="sampleOperation">
-            <input message="tns:SampleRequest"/>
+    <portType name="Address_PortType">
+        <operation name="create">
+            <input message="tns:Address"/>
+            <output message="tns:SampleResponse"/>
+        </operation>
+        <operation name="read">
+            <input message="tns:Address"/>
+            <output message="tns:SampleResponse"/>
+        </operation>
+        <operation name="update">
+            <input message="tns:Address"/>
+            <output message="tns:SampleResponse"/>
+        </operation>
+        <operation name="delete">
+            <input message="tns:Address"/>
+            <output message="tns:SampleResponse"/>
+        </operation>
+        <operation name="all">
             <output message="tns:SampleResponse"/>
         </operation>
     </portType>
-    <binding name="SampleService" type="tns:Sample_PortType">
+    <binding name="SampleService" type="tns:Address_PortType">
         <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
-        <operation name="sampleOperation">
-            <soap:operation soapAction="sampleOperation"/>
+        <operation name="create">
+            <soap:operation soapAction="create"/>
+            <input>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                    namespace="urn:sample:sample-service" use="encoded"/>
+            </input>
+            <output>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                    namespace="urn:sample:sample-service" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="read">
+            <soap:operation soapAction="read"/>
+            <input>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                    namespace="urn:sample:sample-service" use="encoded"/>
+            </input>
+            <output>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                    namespace="urn:sample:sample-service" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="update">
+            <soap:operation soapAction="update"/>
+            <input>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                    namespace="urn:sample:sample-service" use="encoded"/>
+            </input>
+            <output>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                    namespace="urn:sample:sample-service" use="encoded"/>
+            </output>
+        </operation>
+        <operation name="delete">
+            <soap:operation soapAction="delete"/>
             <input>
                 <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
                     namespace="urn:sample:sample-service" use="encoded"/>
