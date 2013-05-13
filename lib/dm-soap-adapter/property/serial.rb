@@ -1,4 +1,4 @@
-module SOAPAdapter::Property
+module SoapAdapter::Property
   class Serial < ::DataMapper::Property::String
     accept_options :serial
     serial true

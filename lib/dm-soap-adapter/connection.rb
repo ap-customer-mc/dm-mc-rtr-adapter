@@ -1,22 +1,11 @@
 require 'dm-soap-adapter/connection/errors'
 
-class SOAPAdapter
+class SoapAdapter
   class Connection
     include Errors
 
-    class HeaderHandler < SOAP::Header::SimpleHandler
-      def initialize(tag, value)
-        super(XSD::QName.new('urn:enterprise.soap.sforce.com', tag))
-        @tag = tag
-        @value = value
-      end
-      def on_simple_outbound
-        @value
-      end
-    end
-
     def initialize(username, password, wsdl_path, api_dir)
-      @wrapper = SoapWrapper.new("GenericAPI", "SOAP", wsdl_path, api_dir)
+      @wrapper = SoapWrapper.new("Generic", "SOAP", wsdl_path, api_dir)
       @username, @password = URI.unescape(username), password
     end
     attr_reader :user_id, :user_details
@@ -30,7 +19,7 @@ class SOAPAdapter
     end
 
     def make_object(klass_name, values)
-      obj = ::GenericAPI.const_get(klass_name).new
+      obj = ::Generic.const_get(klass_name).new
       values.each do |property, value|
         field = field_name_for(klass_name, property)
         if value.nil? or value == ""
@@ -60,6 +49,8 @@ class SOAPAdapter
 
     def query(string)
       with_reconnection do
+        require 'debugger'
+        debugger
         res = driver.query(:queryString => string).result
         records = res.records
         while !res.done

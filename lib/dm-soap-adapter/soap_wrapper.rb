@@ -1,4 +1,4 @@
-class SOAPAdapter
+class SoapAdapter
   class SoapWrapper
     class ClassesFailedToGenerate < StandardError; end
 
@@ -11,16 +11,11 @@ class SOAPAdapter
     end
 
     def driver
-      return @driver if @driver
-      
-      require 'wsdl/soap/wsdl2ruby'
-      factory = SOAP::WSDLDriverFactory.new(wsdl_path)
-      class_name_creator = WSDL::SOAP::ClassNameCreator.new
+      $LOAD_PATH.unshift(File.expand_path("#{wsdl_api_dir}")) 
+      #Dir["#{wsdl_api_dir}/*.rb"].each { |file| require "#{file}"}
+      require "#{wsdl_api_dir}/#{module_name}Driver.rb"
+      @driver ||= ::Generic::Address_PortType.new
 
-      eval(WSDL::SOAP::ClassDefCreator.new(factory.wsdl, class_name_creator, @module_name).dump, TOPLEVEL_BINDING)
-      eval(WSDL::SOAP::MappingRegistryCreator.new(factory.wsdl, class_name_creator, @module_name).dump, TOPLEVEL_BINDING)
-
-      @driver ||= factory.create_rpc_driver
     end
       
     def generate_soap_classes
@@ -31,8 +26,10 @@ class SOAPAdapter
       require "fileutils"
       FileUtils.mkdir_p(wsdl_api_dir)
 
-      generate_files unless files_exist?
-      #generate_files
+      #generate_files unless files_exist?
+      $LOAD_PATH.unshift(File.expand_path("#{wsdl_api_dir}")) 
+      
+      generate_files
       $:.push wsdl_api_dir
       $:.delete wsdl_api_dir
     end
@@ -45,9 +42,6 @@ class SOAPAdapter
       wsdl2ruby.location = wsdl_path
       wsdl2ruby.basedir  = wsdl_api_dir
 
-      require 'debugger'
-      debugger
-      
       wsdl2ruby.opt.merge!({
         'classdef'         => module_name,
         'module_path'      => module_name,
@@ -69,7 +63,7 @@ class SOAPAdapter
     end
 
     def wsdl_api_dir
-      "#{api_dir}/#{File.basename(wsdl_path)}"
+      "#{api_dir}/sample"
     end
   end
 end

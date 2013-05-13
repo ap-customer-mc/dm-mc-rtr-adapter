@@ -1,4 +1,4 @@
-class SOAPAdapter::Connection
+class SoapAdapter::Connection
   module Errors
     class Error             < StandardError; end
     class FieldNotFound     < Error; end
@@ -8,7 +8,7 @@ class SOAPAdapter::Connection
     class ServerUnavailable < Error; end
 
 
-    class SOAPError < Error
+    class SoapError < Error
       def initialize(message, result)
         @result = result
         super("#{message}: #{result.inspect}")
@@ -42,9 +42,9 @@ class SOAPAdapter::Connection
         end
       end
     end
-    class CreateError    < SOAPError; end
-    class QueryError     < SOAPError; end
-    class DeleteError    < SOAPError; end
-    class UpdateError    < SOAPError; end
+    class CreateError    < SoapError; end
+    class QueryError     < SoapError; end
+    class DeleteError    < SoapError; end
+    class UpdateError    < SoapError; end
   end
 end

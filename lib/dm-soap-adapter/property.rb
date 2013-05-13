@@ -1,4 +1,4 @@
-class SOAPAdapter
+class SoapAdapter
   module Property
   end
 end

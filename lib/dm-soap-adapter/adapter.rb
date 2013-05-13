@@ -1,14 +1,13 @@
-class SOAPAdapter
+module DataMapperSoap
+class Adapter < DataMapper::Adapters::AbstractAdapter
+  Inflector = ::DataMapper::Inflector
+  
 
   def initialize(name, uri_or_options)
     super
     @resource_naming_convention = proc do |value|
       klass = Inflector.constantize(value)
-      if klass.respond_to?(:salesforce_class)
-        klass.salesforce_class
-      else
-        value.split("::").last
-      end
+      value.split("::").last
     end
     @field_naming_convention = proc do |property|
       connection.field_name_for(property.model.storage_name(name), property.name.to_s)
@@ -30,7 +29,17 @@ class SOAPAdapter
   # Model#salesforce_errors?
   #
   # Needs to be applied to all CRUD operations.
+  
+  def stupid(resources)
+    require 'debugger'
+    debugger
+    puts 'hi there fart box'
+  end
+  
   def create(resources)
+    
+    require 'debugger'
+    debugger
     arr = resources.map do |resource|
       make_salesforce_obj(resource, resource.dirty_attributes)
     end
@@ -160,4 +169,5 @@ class SOAPAdapter
     properties = Array(klass.send(:salesforce_id_properties)).map { |p| p.to_sym } rescue []
     return properties.include?(property.name) ? value[0..17] : value
   end
+end
 end

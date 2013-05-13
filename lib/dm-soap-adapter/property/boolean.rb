@@ -1,4 +1,4 @@
-module SOAPAdapter::Property
+module SoapAdapter::Property
   class Boolean < ::DataMapper::Property::Integer
     FALSE = 0
     TRUE  = 1
