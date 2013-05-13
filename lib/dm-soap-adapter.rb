@@ -7,10 +7,6 @@ require 'soap/wsdlDriver'
 require 'soap/header/simplehandler'
 require 'rexml/element'
 
-class SOAPAdapter < ::DataMapper::Adapters::AbstractAdapter
-  Inflector = ::DataMapper::Inflector
-end
-
 require 'dm-soap-adapter/resource'
 require 'dm-soap-adapter/connection'
 require 'dm-soap-adapter/connection/errors'
@@ -18,13 +14,6 @@ require 'dm-soap-adapter/soap_wrapper'
 require 'dm-soap-adapter/version'
 require 'dm-soap-adapter/adapter'
 require 'dm-soap-adapter/property'
-Dir[File.dirname(__FILE__) + '/tmp/omg/sample.wsdl/*.rb'].each do |file| 
-  require File.basename(file, File.extname(file))
-end
 
-module DataMapper::SOAP
-    Resource = SOAPAdapter::Resource
-end
-
-::DataMapper::Adapters::SOAPAdapter = SOAPAdapter
-::DataMapper::Adapters.const_added(:SOAPAdapter)
+::DataMapper::Adapters::SoapAdapter = DataMapperSoap::Adapter
+::DataMapper::Adapters.const_added(:SoapAdapter)
