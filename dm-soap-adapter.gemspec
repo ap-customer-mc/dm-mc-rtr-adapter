@@ -5,7 +5,7 @@ require 'dm-soap-adapter/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "dm-soap-adapter"
-  spec.version       = SOAPAdapter::VERSION
+  spec.version       = SoapAdapter::VERSION
   spec.authors       = ["Brandon Cox"]
   spec.email         = ["bcox@anypresence.com"]
   spec.summary       = "DM adapter for SOAP based data sources."
