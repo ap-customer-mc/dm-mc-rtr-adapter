@@ -18,10 +18,6 @@ Gem::Specification.new do |spec|
   
   spec.add_dependency "httpclient",     "= 2.1.5.2"
   spec.add_dependency "data_objects",   "~> 0.10.6"
-  spec.add_dependency "dm-core",        ">= 1.1.0", "< 1.3.0"
-  spec.add_dependency "dm-validations", ">= 1.1.0", "< 1.3.0"
-  spec.add_dependency "dm-types",       ">= 1.1.0", "< 1.3.0"
-  spec.add_dependency "soap4r-ruby1.9", "~> 2.0.0"
       
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"

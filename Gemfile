@@ -12,5 +12,13 @@ group :test do
   gem 'ParseTree',                  :require => 'parse_tree'
   gem 'dm-sweatshop'
   gem 'dm-sqlite-adapter'
-  gem 'soap4r', :git => 'git://github.com/felipec/soap4r.git'
+  
+  
+  DM_VERSION = '~> 1.2.0'
+  gem 'dm-types', DM_VERSION
+  gem "dm-core",  DM_VERSION
+  gem "dm-validations", DM_VERSION
+  
+  gem 'savon', '~> 2.2.0'
+  gem 'debugger'
 end
