@@ -1,6 +1,5 @@
 require 'data_objects'
 require 'dm-core'
-require 'dm-types'
 require 'dm-validations'
 
 require 'soap/wsdlDriver'
@@ -14,6 +13,7 @@ require 'dm-soap-adapter/soap_wrapper'
 require 'dm-soap-adapter/version'
 require 'dm-soap-adapter/adapter'
 require 'dm-soap-adapter/property'
+require 'dm-soap-adapter/model_mapper'
 
 ::DataMapper::Adapters::SoapAdapter = DataMapperSoap::Adapter
 ::DataMapper::Adapters.const_added(:SoapAdapter)
