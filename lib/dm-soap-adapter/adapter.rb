@@ -3,7 +3,7 @@ class Adapter < DataMapper::Adapters::AbstractAdapter
   Inflector = ::DataMapper::Inflector
   
 
-  def initialize(name, uri_or_options)
+  def initialize(name, options)
     super
     @resource_naming_convention = proc do |value|
       klass = Inflector.constantize(value)
@@ -15,48 +15,17 @@ class Adapter < DataMapper::Adapters::AbstractAdapter
   end
 
   def connection
-    @connection ||= Connection.new(options["username"], options["password"], options["path"], options["apidir"])
+    @connection ||= SoapAdapter::Connection.new(@options)
   end
 
-  # FIXME: DM Adapters customarily throw exceptions when they experience errors,
-  # otherwise failed operations (e.g. Resource#save) still return true and thus
-  # confuse the caller.
-  #
-  # Someone needs to make a decision about legacy support and the consequences
-  # of changing the behaviour from broken-but-typical to
-  # correct-but-maybe-unexpected.  Maybe a config file option about whether to
-  # raise exceptions or for the user to always check Model#valid? +
-  # Model#salesforce_errors?
-  #
-  # Needs to be applied to all CRUD operations.
-  
-  def stupid(resources)
-    require 'debugger'
-    debugger
-    puts 'hi there fart box'
-  end
   
   def create(resources)
-    
     require 'debugger'
     debugger
-    arr = resources.map do |resource|
-      make_salesforce_obj(resource, resource.dirty_attributes)
-    end
+    attribute_body = resources[0].attributes
+    result = connection.create(attribute_body)
+    result.body
 
-    result = connection.create(arr)
-    result.each_with_index do |record, i|
-      resource = resources[i]
-      if id_field = resource.class.key.find {|p| p.serial?}
-        normalized_value = normalize_id_value(resource.class, id_field, record.id)
-        id_field.set!(resource, normalized_value)
-      end
-    end
-
-    result.size
-
-  rescue Connection::SOAPError => e
-    handle_server_outage(e)
   end
 
   def update(attributes, collection)
@@ -81,7 +50,7 @@ class Adapter < DataMapper::Adapters::AbstractAdapter
 
   def handle_server_outage(error)
     if error.server_unavailable?
-      raise Connection::ServerUnavailable, "The salesforce server is currently unavailable"
+      raise Connection::ServerUnavailable, "The SOAP server is currently unavailable"
     else
       raise error
     end
