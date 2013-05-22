@@ -24,19 +24,17 @@ class SoapAdapter
     end
 
     def create(objects)
-      require 'debugger'
-      debugger
-      response = @client.call(@options[:create].to_sym, message: objects)
+      response = @client.call(@options['create'].to_sym, message: objects)
       return response.body
     end
 
     def update(objects)
-      response = @client.call(@options[:update].to_sym, message: objects)
+      response = @client.call(@options['update'].to_sym, message: objects)
       return response.body
     end
 
     def delete(keys)
-      response = @client.call(@options[:delete].to_sym, message: keys)
+      response = @client.call(@options['delete'].to_sym, message: keys)
       return response.body
     end
   end
