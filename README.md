@@ -1,7 +1,3 @@
-# Dm::Soap::Adapter
-
-TODO: Write a gem description
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -18,12 +14,26 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+To test the dm-soap-adapter:
 
-## Contributing
+CD into WebServiceTime (the mock SOAP webservice) and run:
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+    rails s -p 3000
+
+Then from the dm-soap-adapter project run:
+
+    ruby example.rb
+
+  This will test the methods on the SOAP adapter. All configuration is in the example.rb file.
+  
+  All of the configuration for the adapter is in example.rb.
+  
+    @adapter = DataMapper.setup(:soap, {:adapter  => 'soap',
+                                   :username => 'api-user@example.org',
+                                   :password => 'PASSWORD',
+                                   :path     => "http://localhost:3000/accounts/wsdl",
+                                   :methods => {:create => 'createAccount',
+                                                :read => 'getAccount',
+                                                :update => 'updateAccount',
+                                                :delete => 'deleteAccount',
+                                                :all => 'allAccounts'}})

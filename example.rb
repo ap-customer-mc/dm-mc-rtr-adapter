@@ -13,7 +13,7 @@ require 'dm-soap-adapter'
 
 class Account
   include SoapAdapter::Resource
-
+  
   def cast_attrs(attrs)
     props = Account.properties
     new_attrs = {}
@@ -52,13 +52,7 @@ class Account
   
   
   def self.default_repository_name
-    :default
-  end
-
-  # Old method for designating which fields are Salesforce-style IDs.  Alternatively, can
-  # use the Salesforce-specific Serial custom DM type (see next model).
-  def self.salesforce_id_properties
-    :id
+    :soap
   end
 
   property :id,          String, :key => true
@@ -74,7 +68,7 @@ class Contact
   include SoapAdapter::Resource
 
   def self.default_repository_name
-    :default
+    :soap
   end
 
   property :id,         Serial
@@ -89,14 +83,42 @@ end
 @adapter = DataMapper.setup(:soap, {:adapter  => 'soap',
                                :username => 'api-user@example.org',
                                :password => 'PASSWORD',
-                               :path     => "sample.wsdl",
-                               :apidir   => "api",
-                               :host => ''})
+                               :path     => "http://localhost:3000/accounts/wsdl",
+                               :class    => Account,
+                               :methods => {:create => 'createAccount',
+                                            :read => 'getAccount',
+                                            :update => 'updateAccount',
+                                            :delete => 'deleteAccount',
+                                            :all => 'allAccounts'}})
                                
                                
                                
-a = Account.new(name: 'stuff')
-puts @adapter.create(a)
+first = Account.new(  :id => '10004',
+                      :name => 'name',
+                      :description => 'description', 
+                      :fax => 'fax',
+                      :phone => 'phone', 
+                      :type => 'type',
+                      :website => 'website')
+
+second = Account.new( :id => '10004',
+                      :name => 'name_updated',
+                      :description => 'description_updated', 
+                      :fax => 'fax_updated',
+                      :phone => 'phone_updated', 
+                      :type => 'type_updated',
+                      :website => 'website_updated')
+
+puts 'testing create...'
+first = Account.create(first.attributes)
+puts 'testing update...'
+puts @adapter.update(second, first)
+Account.get(10004)
+puts 'testing delete...'
+puts @adapter.delete(1005)
+puts 'testing all...'
+puts @adapter.all()
+
  
 
 

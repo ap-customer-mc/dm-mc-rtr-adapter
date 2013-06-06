@@ -3,7 +3,6 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in dm-soap-adapter.gemspec
 gemspec
 
-
 group :test do
   gem 'rspec',          '~>1.0',    :require => %w(spec)
   gem 'rake'
@@ -20,5 +19,5 @@ group :test do
   gem "dm-validations", DM_VERSION
   
   gem 'savon', '~> 2.2.0'
-  gem 'debugger'
+
 end

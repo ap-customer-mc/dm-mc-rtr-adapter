@@ -1,7 +1,7 @@
 module DataMapperSoap
   class Adapter < DataMapper::Adapters::AbstractAdapter
     Inflector = ::DataMapper::Inflector
-  
+
     def initialize(name, options)
       super
       @resource_naming_convention = proc do |value|
@@ -16,7 +16,19 @@ module DataMapperSoap
     def connection
       @connection ||= SoapAdapter::Connection.new(@options)
     end
+    
+    def get(keys)
+      
+      response = connection.get(keys)
 
+      rescue Connection::SOAPError => e
+        handle_server_outage(e)
+        
+    end
+
+    def read(query)
+      puts 'Not Yet Implemented.'
+    end
   
     def create(resources)
       attribute_body = resources[0].attributes
@@ -26,14 +38,15 @@ module DataMapperSoap
         handle_server_outage(e)
       end
 
-    def update(attributes, collection)
-      connection.update(collection)
+    def update(updated_model, collection)
+      response = connection.update(updated_model.attributes)
+      
       rescue Connection::SOAPError => e
         handle_server_outage(e)
     end
 
     def delete(collection)
-      connection.delete(collection).size
+      connection.delete(collection)
 
       rescue Connection::SOAPError => e
         handle_server_outage(e)
