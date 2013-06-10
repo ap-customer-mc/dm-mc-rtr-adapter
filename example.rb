@@ -81,8 +81,6 @@ end
 
 
 @adapter = DataMapper.setup(:soap, {:adapter  => 'soap',
-                               :username => 'api-user@example.org',
-                               :password => 'PASSWORD',
                                :path     => "http://localhost:3000/accounts/wsdl",
                                :class    => Account,
                                :methods => {:create => 'createAccount',
@@ -113,6 +111,7 @@ puts 'testing create...'
 first = Account.create(first.attributes)
 puts 'testing update...'
 puts @adapter.update(second, first)
+puts 'testing read'
 Account.get(10004)
 puts 'testing delete...'
 puts @adapter.delete(1005)
