@@ -1,0 +1,36 @@
+require 'rubygems'
+require 'pathname'
+
+# Support running specs with 'rake spec' and 'spec'
+$LOAD_PATH.unshift('lib') unless $LOAD_PATH.include?('lib')
+
+require 'dm-soap-adapter'
+require "savon/mock/spec_helper"
+require 'dm-core/spec/shared/adapter_spec'
+
+require 'mocha/api'
+
+
+DataMapper.setup(:default, {
+   :adapter => :soap,
+   :path    => "http://localhost:8989"
+  }
+)
+
+ROOT = Pathname(__FILE__).dirname.parent
+
+Pathname.glob((ROOT + 'spec/fixtures/**/*.rb').to_s).each { |file| require file }
+Pathname.glob((ROOT + 'spec/**/shared/**/*.rb').to_s).each { |file| require file }
+
+ENV['ADAPTER'] = 'soap'
+ENV['ADAPTER_SUPPORTS'] = 'all'
+HOST = "localhost"
+PORT = 9999
+TEST_USERNAME = 'humpty'
+TEST_PASSWORD = 'dumpty'
+
+DataMapper.finalize
+
+RSpec.configure do |config|
+  config.mock_framework = :mocha
+end

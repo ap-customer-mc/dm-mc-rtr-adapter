@@ -1,4 +1,5 @@
-module DataMapper
+require 'spec_helper'
+describe DataMapper::Adapters::Soap::Connection do
   describe "Using the raw connection" do
     describe "when authenticating without an organization id" do
       describe "with the correct credentials" do
@@ -12,7 +13,7 @@ module DataMapper
                                                       :delete => 'deleteAccount',
                                                       :all => 'allAccounts'}})
           db = ::DataMapper.repository(:soap).adapter.connection
-          Connection.new(VALID_USER.username, VALID_USER.password, db.wsdl_path, db.api_dir)
+          #DataMapper::Adapters::Soap::Connection.new(TEST_USERNAME, TEST_PASSWORD, db.wsdl_path, db.api_dir)
         end
       end
     end
