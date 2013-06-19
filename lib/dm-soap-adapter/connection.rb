@@ -11,10 +11,11 @@ module DataMapper
           @methods = options.fetch(:methods)
           raise "Methods must be specified!" if @methods.empty?
           @create_method = @methods.fetch(:create)
-          @read_method = @methods.fetch(:read)
+          @read_method = @methods.fetch(:read) # This maps to get a single object
           @update_method = @methods.fetch(:update)
           @delete_method = @methods.fetch(:delete)
-          @all_method = @methods.fetch(:all) # What exactly is this supposed to do?
+          # So... this would be "query" and we stuff everything here and hope the other side knows how to handle it
+          @query_method = @methods.fetch(:query) 
           
           @client = Savon.client(wsdl: @wsdl_path)
           @options = options
@@ -26,7 +27,6 @@ module DataMapper
         end
 
         def call_create(objects)
-          
           call_service(@create_method, message: objects)
         end
 
@@ -42,8 +42,12 @@ module DataMapper
           call_service(@read_method, message: id)
         end
     
+        def call_query(query)
+          call_service(@query_method, message: query)
+        end
+        
         def call_service(operation, objects)
-          DataMapper.logger.debug( "calling client #{operation} with #{objects.inspect}")
+          DataMapper.logger.debug( "calling client #{operation.snakecase.to_sym} with #{objects.inspect}")
           response = @client.call(operation.snakecase.to_sym, objects)
         end
         

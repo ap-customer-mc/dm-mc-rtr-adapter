@@ -6,8 +6,10 @@ require 'dm-soap-adapter/connection'
 require 'dm-soap-adapter/errors'
 require 'dm-soap-adapter/version'
 require 'dm-soap-adapter/parser_delegate'
+require 'dm-soap-adapter/query_delegate'
 require 'dm-soap-adapter/adapter'
 
-require 'nokogiri'
+require 'savon'
 
 ::DataMapper::Adapters::SoapAdapter = DataMapper::Adapters::Soap::Adapter
+::DataMapper::Adapters.const_added(:SoapAdapter)

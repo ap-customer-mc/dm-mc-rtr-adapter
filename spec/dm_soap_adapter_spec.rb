@@ -12,7 +12,7 @@ describe DataMapper::Adapters::Soap::Adapter do
             :read => 'getHeffalump',
             :update => 'updateHeffalump',
             :delete => 'deleteHeffalump',
-            :all => 'allHeffalumps'
+            :query => 'queryHeffalumps'
           },
         :enable_mock_setters => true
       }
@@ -54,19 +54,33 @@ describe DataMapper::Adapters::Soap::Adapter do
 
     describe '#read' do
       before(:all) do
+        @result = {:id => 3, :color => "peach", :num_spots => nil}
         @heffalump = Heffalump.new(:color => 'peach')
-        @result = {:id => 3, :color => "peach"}
+
       end
-      
-        it 'should not raise any errors' do
-          @heffalump.id.should be_nil
-          @client.expects(:call).with(:create_heffalump, {:message => {:id => nil, :color => 'peach'}}).once.returns(@response)
+        
+        it 'should get by ID' do
+          @client.expects(:call).with(:create_heffalump, {:message => {:color => 'peach'}}).once.returns(@response)
           @response.expects(:body).once.returns(@result)
-          @heffalump.save.should be_true
+          #save instance
+          @heffalump.save!.should be_true
           @heffalump.id.should_not be_nil
-          lambda {
-            Heffalump.all.should be_include(@heffalump)
-          }.should_not raise_error
+          
+          @client.expects(:call).with(:query_heffalumps, {:message => {
+            :model => 'heffalumps', 
+            :fields => [:id, :color, :num_spots, :latitude, :striped, :created, :at_time], 
+            :conditions => [{:equal => [:id, 3]}], 
+            :limit => 1, 
+            :offset => 0}}).once.returns(@response)
+          @response.expects(:body).once.returns([@result])
+          lump = Heffalump.get(3)
+          lump.should == @heffalump
+        end
+        
+        it 'should query' do
+          @client.expects(:call).with(:query_heffalumps, {:message => {:model => 'heffalumps', :fields => [:id, :color, :num_spots, :latitude, :striped, :created, :at_time], :conditions => [], :order => [{:id => :asc}], :offset => 0}}).once.returns(@response)
+          @response.expects(:body).once.returns([@result])
+          Heffalump.all().should be_include(@heffalump)
         end
     end
 

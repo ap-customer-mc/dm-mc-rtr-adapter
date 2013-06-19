@@ -11,7 +11,7 @@ describe DataMapper::Adapters::Soap::Connection do
                                                       :read => 'getAccount',
                                                       :update => 'updateAccount',
                                                       :delete => 'deleteAccount',
-                                                      :all => 'allAccounts'}})
+                                                      :query => 'queryAccounts'}})
           db = ::DataMapper.repository(:soap).adapter.connection
           #DataMapper::Adapters::Soap::Connection.new(TEST_USERNAME, TEST_PASSWORD, db.wsdl_path, db.api_dir)
         end

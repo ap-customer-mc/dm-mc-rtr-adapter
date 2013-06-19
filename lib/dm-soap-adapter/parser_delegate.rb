@@ -6,7 +6,7 @@ module DataMapper
         
         def parse_collection(array, model)
           DataMapper.logger.debug("parse_collection is about to parse\n #{array.inspect}")
-          array.each do |instance|
+          array.collect do |instance|
             parse_record(instance, model)
           end
         end
@@ -20,16 +20,18 @@ module DataMapper
         def record_from_hash(hash, field_to_property)
           record = {}
           hash.each do |field, value|
-            property = field_to_property[field]
-            if property.nil?
-              property = field_to_property[field]
-            end
+            name = field.to_s
+            property = field_to_property[name]
 
+            if property.nil?
+              property = field_to_property[name.to_sym]
+            end
+            
             if property.instance_of? DataMapper::Property::Object
               raise "Array properties are not yet supported!"
             else
               next unless property
-              record[field] = property.typecast(value)
+              record[name] = property.typecast(value)
             end
           end
 
@@ -37,7 +39,7 @@ module DataMapper
         end
 
         def make_field_to_property_hash(model)
-          Hash[ model.properties(model.default_repository_name).map { |p| [ p.field.to_sym, p ] } ]
+          Hash[ model.properties(model.default_repository_name).map { |p| [ p.field, p ] } ]
         end
         
         def resource_name(model)

@@ -3,8 +3,7 @@ module DataMapper
   module Adapters
     module Soap
       class Adapter < DataMapper::Adapters::AbstractAdapter
-        include ::DataMapper::Adapters::Soap::Errors
-        include ::DataMapper::Adapters::Soap::ParserDelegate
+        include Errors, ParserDelegate, QueryDelegate
         
         def initialize(name, options)
           super
@@ -29,7 +28,19 @@ module DataMapper
         end
 
         def read(query)
-          puts 'Not Yet Implemented.'
+          DataMapper.logger.debug("Read #{query.inspect} and its model is #{query.model.inspect}")
+          model = query.model
+          soap_query = build_query(query)
+          begin
+            
+            response = connection.call_query(soap_query)
+            DataMapper.logger.debug("response was #{response.inspect}")
+            body = response.body
+            return [] unless body
+            return parse_collection(body, model)
+          rescue SoapError => e
+            handle_server_outage(e)
+          end
         end
   
         def create(resources)
