@@ -6,15 +6,13 @@ module DataMapper
         include ::DataMapper::Adapters::Soap::Errors
         include ::DataMapper::Adapters::Soap::ParserDelegate
         
-        attr_accessor :repository_name
-        
         def initialize(name, options)
           super
-          @repository_name = options.fetch(:repository_name, :default)
+          @expose_connection = @options.fetch(:enable_mock_setters, false)
         end
 
         def connection=(connection)
-          @connection = connection if @options.fetch(:enable_mock_setters)
+          @connection = connection if @expose_connection
         end
         
         def connection

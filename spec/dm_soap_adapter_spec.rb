@@ -14,7 +14,6 @@ describe DataMapper::Adapters::Soap::Adapter do
             :delete => 'deleteHeffalump',
             :all => 'allHeffalumps'
           },
-        :class => Heffalump,
         :enable_mock_setters => true
       }
     )

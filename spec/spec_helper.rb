@@ -10,13 +10,6 @@ require 'dm-core/spec/shared/adapter_spec'
 
 require 'mocha/api'
 
-
-DataMapper.setup(:default, {
-   :adapter => :soap,
-   :path    => "http://localhost:8989"
-  }
-)
-
 DataMapper::Logger.new(STDOUT, :debug)
 
 ROOT = Pathname(__FILE__).dirname.parent
