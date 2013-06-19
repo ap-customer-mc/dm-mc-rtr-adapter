@@ -40,7 +40,7 @@ module DataMapper
             
             begin
               response = connection.call_create(resource.attributes)
-              puts("Result of actual create call is #{response.inspect}")
+              DataMapper.logger.debug("Result of actual create call is #{response.inspect}")
               result = update_attributes(resource, response.body)
             rescue SoapError => e
               handle_server_outage(e)    
@@ -56,7 +56,7 @@ module DataMapper
           properties.each do |prop| 
             fields[prop.field.to_sym] = prop.name.to_sym
           end
-          puts "Properties are #{properties.inspect} and body is #{body.inspect}"
+          DataMapper.logger.debug( "Properties are #{properties.inspect} and body is #{body.inspect}")
           
           parse_record(body, model).each do |key, value|
             if property = properties[fields[key.to_sym]]
@@ -78,7 +78,7 @@ module DataMapper
         def parse_record(xml,model)
           xml_doc = Nokogiri::XML(xml)
           field_to_property = Hash[ model.properties(model.default_repository_name).map { |p| [ p.field, p ] } ]
-          puts "xml is #{xml.inspect}"
+          DataMapper.logger.debug("xml is #{xml.inspect}")
           entity_element = xml_doc.xpath("/#{element_name(model)}").first
           record_from_xml(entity_element, field_to_property)
         end
@@ -95,6 +95,7 @@ module DataMapper
             end
             
             if property.instance_of? DataMapper::Property::Object
+              raise "Array properties are not yet supported!"
               record[field] = parse_array(element.to_s,element.name.to_s.tr('-', '_'))
             else
               next unless property

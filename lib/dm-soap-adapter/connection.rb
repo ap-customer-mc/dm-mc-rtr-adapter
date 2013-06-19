@@ -16,6 +16,7 @@ module DataMapper
         end
         
         def make_object(klass_name, values)
+          raise "Don't use me brah!"
           obj = ::Class.const_get(klass_name.to_s).new
           response_props = values.flatten[1]
           response_props.each do |property, value|
@@ -31,6 +32,7 @@ module DataMapper
         end
     
         def field_name_for(klass_name, column)
+          raise "Don't use me brah!"
           klass = ::Class.const_get(klass_name)
           fields = [column, ::DataMapper::Inflector.camelize(column.to_s), "#{::DataMapper::Inflector.camelize(column.to_s)}__c", "#{column}__c".downcase]
           options = /^(#{fields.join("|")})$/i
@@ -46,7 +48,7 @@ module DataMapper
         end
 
         def call_create(objects)
-          puts "calling create with #{@options['methods']['create']}, #{objects}"
+          
           call_service(@options['methods']['create'], message: objects)
         end
 
@@ -63,6 +65,7 @@ module DataMapper
         end
     
         def call_service(operation, objects)
+          DataMapper.logger.debug( "calling client #{operation} with #{objects.inspect}")
           response = @client.call(operation.snakecase.to_sym, objects)
         end
         

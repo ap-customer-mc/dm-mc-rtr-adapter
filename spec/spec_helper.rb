@@ -17,6 +17,8 @@ DataMapper.setup(:default, {
   }
 )
 
+DataMapper::Logger.new(STDOUT, :debug)
+
 ROOT = Pathname(__FILE__).dirname.parent
 
 Pathname.glob((ROOT + 'spec/fixtures/**/*.rb').to_s).each { |file| require file }

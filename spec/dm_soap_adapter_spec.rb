@@ -45,7 +45,6 @@ describe DataMapper::Adapters::Soap::Adapter do
           @client.expects(:call).with(:create_heffalump, {:message => {:id => nil, :color => 'peach'}}).once.returns(@response)
           @response.expects(:body).once.returns(xml)
           heffalump.save.should be_true
-          puts "it is #{heffalump.inspect}"
           heffalump.id.should_not be_nil
           heffalump.id.should be_a_kind_of(Numeric)
           heffalump.id.should == 2
