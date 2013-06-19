@@ -30,9 +30,9 @@ describe DataMapper::Adapters::Soap::Adapter do
 
       it 'should not raise any errors' do
         heffalump = Heffalump.new(:color => 'peach')            
-        xml = '<heffalump><id>1</id><color>peach</color></heffalump>'
+        result = {:id => 1, :color => "peach"}
         @client.expects(:call).with(:create_heffalump, {:message => {:color => 'peach'}}).once.returns(@response)
-        @response.expects(:body).once.returns(xml)
+        @response.expects(:body).once.returns(result)
         lambda {
           heffalump.save
         }.should_not raise_error
@@ -40,10 +40,10 @@ describe DataMapper::Adapters::Soap::Adapter do
 
       it 'should set the identity field for the resource' do
           heffalump = Heffalump.new(:color => 'peach')
-          xml = '<heffalump><id>2</id><color>peach</color></heffalump>'
+          result = {:id => 2, :color => "peach"}
           heffalump.id.should be_nil
           @client.expects(:call).with(:create_heffalump, {:message => {:id => nil, :color => 'peach'}}).once.returns(@response)
-          @response.expects(:body).once.returns(xml)
+          @response.expects(:body).once.returns(result)
           heffalump.save.should be_true
           heffalump.id.should_not be_nil
           heffalump.id.should be_a_kind_of(Numeric)
@@ -56,13 +56,13 @@ describe DataMapper::Adapters::Soap::Adapter do
     describe '#read' do
       before(:all) do
         @heffalump = Heffalump.new(:color => 'peach')
-        @xml = '<heffalump><id>2</id><color>peach</color></heffalump>'
+        @result = {:id => 3, :color => "peach"}
       end
       
         it 'should not raise any errors' do
           @heffalump.id.should be_nil
           @client.expects(:call).with(:create_heffalump, {:message => {:id => nil, :color => 'peach'}}).once.returns(@response)
-          @response.expects(:body).once.returns(@xml)
+          @response.expects(:body).once.returns(@result)
           @heffalump.save.should be_true
           @heffalump.id.should_not be_nil
           lambda {

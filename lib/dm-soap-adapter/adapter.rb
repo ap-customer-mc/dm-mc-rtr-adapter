@@ -4,7 +4,7 @@ module DataMapper
     module Soap
       class Adapter < DataMapper::Adapters::AbstractAdapter
         include ::DataMapper::Adapters::Soap::Errors
-        include ::DataMapper::Adapters::Soap::XmlDelegate
+        include ::DataMapper::Adapters::Soap::ParserDelegate
         
         attr_accessor :repository_name
         

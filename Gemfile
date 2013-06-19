@@ -16,7 +16,7 @@ group :test do
   DM_VERSION = '~> 1.2.0'
   gem 'dm-types', DM_VERSION
   gem "dm-core",  DM_VERSION
-  gem 'nokogiri'
+
   gem 'savon', '~> 2.2.0'
   gem "mocha", '~> 0.13', :require => false
   gem 'soap4r', :git => 'git://github.com/felipec/soap4r.git'
