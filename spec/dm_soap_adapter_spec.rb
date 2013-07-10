@@ -167,7 +167,7 @@ describe DataMapper::Adapters::Soap::Adapter do
         end
     end
 
-
+=begin
     describe 'query matching' do
         require 'dm-core/core_ext/symbol'
 
@@ -248,10 +248,6 @@ describe DataMapper::Adapters::Soap::Adapter do
             end
           end
 
-  	# HANA does not have Regex support
-          #describe 'regexp' do
-          #end
-
           describe 'gt' do
             it 'should be able to search for objects with value greater than' do
               Heffalump.all(:num_spots.gt => 1).should be_include(@two)
@@ -307,4 +303,5 @@ describe DataMapper::Adapters::Soap::Adapter do
           end
         end
       end
+=end
 end
