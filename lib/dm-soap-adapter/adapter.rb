@@ -42,7 +42,21 @@ module DataMapper
             handle_server_outage(e)
           end
         end
-  
+
+        # Persists one or many new resources
+        #
+        # @example
+        #   adapter.create(collection)  # => 1
+        #
+        # Adapters provide specific implementation of this method
+        #
+        # @param [Enumerable<Resource>] resources
+        #   The list of resources (model instances) to create
+        #
+        # @return [Integer]
+        #   The number of records that were actually saved into the data-store
+        #
+        # @api semipublic  
         def create(resources)
           resources.each do |resource|
             model = resource.model
@@ -74,12 +88,36 @@ module DataMapper
             end
           end
         end
-                            
-        def update(updated_model, collection)
-          response = connection.call_update(updated_model.attributes)
-      
-        rescue SoapError => e
-          handle_server_outage(e)
+        
+        # Updates one or many existing resources
+        #
+        # @example
+        #   adapter.update(attributes, collection)  # => 1
+        #
+        # Adapters provide specific implementation of this method
+        #
+        # @param [Hash(Property => Object)] attributes
+        #   hash of attribute values to set, keyed by Property
+        # @param [Collection] collection
+        #   collection of records to be updated
+        #
+        # @return [Integer]
+        #   the number of records updated
+        #
+        # @api semipublic
+        def update(attributes, collection)
+          DataMapper.logger.debug("Update called with:\nAttributes #{attributes.inspect} \nCollection: #{collection.inspect}")
+          collection.select do |resource|
+
+            attributes.each { |property, value| property.set!(resource, value) }
+            DataMapper.logger.debug("About to call update with #{resource.attributes}")
+            begin
+              response = connection.call_update(resource.attributes)
+              update_attributes(resource, response)
+            rescue SoapError => e
+              handle_server_outage(e)
+            end
+          end.size
         end
 
         def delete(collection)

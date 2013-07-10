@@ -86,13 +86,24 @@ describe DataMapper::Adapters::Soap::Adapter do
 
     describe '#update' do
         before do
-          @heffalump = Heffalump.create(:color => 'indigo')
+          @result = {:id => 4, :color => "indigo", :num_spots => nil, :latitude => nil, :striped => nil, :created => nil, :at_time => nil}
+          @heffalump = Heffalump.new(:color => 'indigo')
         end
 
         it 'should not raise any errors' do
           lambda {
+            @client.expects(:call).with(:create_heffalump, {:message => {:color => 'indigo'}}).once.returns(@response)
+            @response.expects(:body).once.returns(@result)
+            @heffalump.save.should be_true
+            @heffalump.color.should == 'indigo'
+            
             @heffalump.color = 'violet'
-            @heffalump.save
+            
+            @client.expects(:call).with(:update_heffalump, {:message => {:id => 4, :color => 'violet', :num_spots => nil, :latitude => nil, :striped => nil, :created => nil, :at => nil}}).once.returns(@response)
+            @response.expects(:each).once.returns({:id => 4, :color => 'violet', :num_spots => nil, :latitude => nil, :striped => nil, :created => nil, :at_time => nil})
+            
+            @heffalump.save.should be_true
+            @heffalump.color.should == 'violet'
           }.should_not raise_error
         end
 
