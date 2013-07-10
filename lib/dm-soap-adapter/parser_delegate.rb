@@ -13,13 +13,16 @@ module DataMapper
         
         def parse_record(hash,model)
           field_to_property = make_field_to_property_hash(model)
-          DataMapper.logger.debug("parse_record is converting #{hash.inspect} using #{field_to_property.inspect} for model #{model}")
-          record_from_hash(hash, field_to_property)
+          DataMapper.logger.debug("parse_record is converting #{hash.inspect} for model #{model}")
+          record = record_from_hash(hash, field_to_property)
+          DataMapper.logger.debug("Record made from hash is #{record}")
+          record
         end
 
         def record_from_hash(hash, field_to_property)
           record = {}
           hash.each do |field, value|
+            DataMapper.logger.debug("#{field} = #{value}")
             name = field.to_s
             property = field_to_property[name]
 

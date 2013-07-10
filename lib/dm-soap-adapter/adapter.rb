@@ -113,7 +113,8 @@ module DataMapper
             DataMapper.logger.debug("About to call update with #{resource.attributes}")
             begin
               response = connection.call_update(resource.attributes)
-              update_attributes(resource, response)
+              body = response.body
+              update_attributes(resource, body)
             rescue SoapError => e
               handle_server_outage(e)
             end
@@ -121,10 +122,16 @@ module DataMapper
         end
 
         def delete(collection)
-          connection.call_delete(collection)
-
-        rescue SoapError => e
-          handle_server_outage(e)
+          collection.select do |resource|
+            model = resource.model
+            key = model.key
+            id = key.get(resource).join
+            begin
+              connection.call_delete({ key.first.field.to_sym => id})
+            rescue SoapError => e
+              handle_server_outage(e)
+            end
+          end.size
         end
 
         def handle_server_outage(error)
