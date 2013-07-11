@@ -15,7 +15,7 @@ module DataMapper
           @update_method = @methods.fetch(:update)
           @delete_method = @methods.fetch(:delete)
           # So... this would be "query" and we stuff everything here and hope the other side knows how to handle it
-          @query_method = @methods.fetch(:query) 
+          @query_method = @methods.fetch(:all) 
           
           @client = Savon.client(wsdl: @wsdl_path)
           @options = options

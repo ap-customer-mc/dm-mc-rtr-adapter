@@ -12,7 +12,7 @@ describe DataMapper::Adapters::Soap::Adapter do
             :read => 'getHeffalump',
             :update => 'updateHeffalump',
             :delete => 'deleteHeffalump',
-            :query => 'queryHeffalumps'
+            :all => 'queryHeffalumps'
           },
         :enable_mock_setters => true
       }
