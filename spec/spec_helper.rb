@@ -10,7 +10,7 @@ require 'dm-core/spec/shared/adapter_spec'
 
 require 'mocha/api'
 
-DataMapper::Logger.new(STDOUT, :debug)
+#DataMapper::Logger.new(STDOUT, :debug)
 
 ROOT = Pathname(__FILE__).dirname.parent
 

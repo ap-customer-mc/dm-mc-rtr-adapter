@@ -16,17 +16,7 @@ Or install it yourself as:
 
 To test the dm-soap-adapter:
 
-CD into WebServiceTime (the mock SOAP webservice) and run:
-
-    rails s -p 3000
-
-Then from the dm-soap-adapter project run:
-
-    ruby example.rb
-
-  This will test the methods on the SOAP adapter. All configuration is in the example.rb file.
-  
-  All of the configuration for the adapter is in example.rb.
+    $ rspec spec
   
     @adapter = DataMapper.setup(:soap, {:adapter  => 'soap',
                                    :username => 'api-user@example.org',
@@ -36,4 +26,4 @@ Then from the dm-soap-adapter project run:
                                                 :read => 'getAccount',
                                                 :update => 'updateAccount',
                                                 :delete => 'deleteAccount',
-                                                :all => 'allAccounts'}})
+                                                :query => 'queryAccounts'}})
