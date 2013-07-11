@@ -8,14 +8,12 @@ module DataMapper
 
         def initialize(options)
           @wsdl_path = options.fetch(:path)
-          @methods = options.fetch(:methods)
-          raise "Methods must be specified!" if @methods.empty?
-          @create_method = @methods.fetch(:create)
-          @read_method = @methods.fetch(:read) # This maps to get a single object
-          @update_method = @methods.fetch(:update)
-          @delete_method = @methods.fetch(:delete)
+          @create_method = options.fetch(:create)
+          @read_method = options.fetch(:read) # This maps to get a single object
+          @update_method = options.fetch(:update)
+          @delete_method = options.fetch(:delete)
           # So... this would be "query" and we stuff everything here and hope the other side knows how to handle it
-          @query_method = @methods.fetch(:all) 
+          @query_method = options.fetch(:all) 
           
           @client = Savon.client(wsdl: @wsdl_path)
           @options = options

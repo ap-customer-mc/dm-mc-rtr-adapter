@@ -7,13 +7,11 @@ describe DataMapper::Adapters::Soap::Adapter do
     @adapter = DataMapper.setup(:default, 
       { :adapter  => :soap,
         :path     => "http://#{HOST}:#{PORT}/HeffalumpsWS",
-        :methods => 
-          { :create => 'createHeffalump',
-            :read => 'getHeffalump',
-            :update => 'updateHeffalump',
-            :delete => 'deleteHeffalump',
-            :all => 'queryHeffalumps'
-          },
+        :create => 'createHeffalump',
+        :read => 'getHeffalump',
+        :update => 'updateHeffalump',
+        :delete => 'deleteHeffalump',
+        :all => 'queryHeffalumps',
         :enable_mock_setters => true
       }
     )
