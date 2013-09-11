@@ -7,7 +7,9 @@ module DataMapper
         
         def initialize(name, options)
           super
+          @options = options
           @expose_connection = @options.fetch(:enable_mock_setters, false)
+          initialize_logger
         end
 
         def connection=(connection)
@@ -42,13 +44,13 @@ module DataMapper
         #
         # @api semipublic
         def read(query)
-          DataMapper.logger.debug("Read #{query.inspect} and its model is #{query.model.inspect}")
+          @log.debug("Read #{query.inspect} and its model is #{query.model.inspect}")
           model = query.model
           soap_query = build_query(query)
           begin
             
             response = connection.call_query(soap_query)
-            DataMapper.logger.debug("response was #{response.inspect}")
+            @log.debug("response was #{response.inspect}")
             body = response.body
             return [] unless body
             return parse_collection(body, model)
@@ -74,11 +76,11 @@ module DataMapper
         def create(resources)
           resources.each do |resource|
             model = resource.model
-            DataMapper.logger.debug("About to create #{model} using #{resource.attributes}")
+            @log.debug("About to create #{model} using #{resource.attributes}")
             
             begin
               response = connection.call_create(resource.attributes)
-              DataMapper.logger.debug("Result of actual create call is #{response.inspect}")
+              @log.debug("Result of actual create call is #{response.inspect}")
               result = update_attributes(resource, response.body)
             rescue SoapError => e
               handle_server_outage(e)    
@@ -103,11 +105,11 @@ module DataMapper
         #
         # @api semipublic
         def update(attributes, collection)
-          DataMapper.logger.debug("Update called with:\nAttributes #{attributes.inspect} \nCollection: #{collection.inspect}")
+          @log.debug("Update called with:\nAttributes #{attributes.inspect} \nCollection: #{collection.inspect}")
           collection.select do |resource|
 
             attributes.each { |property, value| property.set!(resource, value) }
-            DataMapper.logger.debug("About to call update with #{resource.attributes}")
+            @log.debug("About to call update with #{resource.attributes}")
             begin
               response = connection.call_update(resource.attributes)
               body = response.body
@@ -153,7 +155,7 @@ module DataMapper
           properties.each do |prop| 
             fields[prop.field.to_sym] = prop.name.to_sym
           end
-          DataMapper.logger.debug( "Properties are #{properties.inspect} and body is #{body.inspect}")
+          @log.debug( "Properties are #{properties.inspect} and body is #{body.inspect}")
           
           parse_record(body, model).each do |key, value|
             if property = properties[fields[key.to_sym]]
@@ -167,6 +169,21 @@ module DataMapper
             raise ServerUnavailable, "The SOAP server is currently unavailable"
           else
             raise error
+          end
+        end
+        
+        def initialize_logger
+          level = 'error'
+
+          if @options[:logging_level] && %w[ off fatal error warn info debug ].include?(@options[:logging_level].downcase)
+            level = @options[:logging_level].downcase
+          end
+          DataMapper::Logger.new($stdout,level)
+          @log = DataMapper.logger
+          if level == 'debug'
+            @log.debug("Adding Savon client debugging proxy")
+            Savon.client(logger: $stdout)
+            Savon.client(log_level: :debug)
           end
         end
       end
