@@ -10,6 +10,3 @@ require 'dm-soap-adapter/query_delegate'
 require 'dm-soap-adapter/adapter'
 
 require 'savon'
-
-::DataMapper::Adapters::SoapAdapter = DataMapper::Adapters::Soap::Adapter
-::DataMapper::Adapters.const_added(:SoapAdapter)

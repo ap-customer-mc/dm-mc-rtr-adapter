@@ -186,7 +186,10 @@ module DataMapper
             Savon.client(log_level: :debug)
           end
         end
-      end
+      end # class Adapter
     end
+    
+    ::DataMapper::Adapters::SoapAdapter = DataMapper::Adapters::Soap::Adapter
+    self.send(:const_added,:SoapAdapter)
   end
 end
