@@ -16,7 +16,14 @@ module DataMapper
           @query_method = options.fetch(:all)
           
           savon_ops = { wsdl: @wsdl_path }
-          savon_ops.merge!(wsse_auth: [options[:username], options[:password]]) if options[:username] && options[:password]
+          
+          auth_ops = {}
+          if options[:username] && options[:password]
+            auth_ops[:wsse_auth] = [options[:username], options[:password]]
+            auth_ops[:wsse_auth] << :digest if options[:digest]
+          end
+          
+          savon_ops.merge!(auth_ops) 
           
           @client = Savon.client(savon_ops)
           @options = options
