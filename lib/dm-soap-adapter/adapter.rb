@@ -180,11 +180,6 @@ module DataMapper
           end
           DataMapper::Logger.new($stdout,level)
           @log = DataMapper.logger
-          if level == 'debug'
-            @log.debug("Adding Savon client debugging proxy")
-            Savon.client(logger: $stdout)
-            Savon.client(log_level: :debug)
-          end
         end
       end # class Adapter
     end

@@ -23,8 +23,17 @@ module DataMapper
             auth_ops[:wsse_auth] << :digest if options[:digest]
           end
           
-          savon_ops.merge!(auth_ops) 
-          
+          savon_ops.merge!(auth_ops)
+
+          if options[:logging_level] && %w[ off fatal error warn info debug ].include?(options[:logging_level].downcase)
+            level = options[:logging_level].downcase
+            if level == 'off'
+              savon_ops.merge!(log: false)
+            else
+              savon_ops.merge!(log: true, logger: DataMapper.logger, log_level: level.to_sym)
+            end
+          end
+                    
           @client = Savon.client(savon_ops)
           @options = options
           @expose_client = @options.fetch(:enable_mock_setters, false)
