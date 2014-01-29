@@ -13,11 +13,12 @@ module DataMapper
           @update_method = options.fetch(:update)
           @delete_method = options.fetch(:delete)
           # So... this would be "query" and we stuff everything here and hope the other side knows how to handle it
-          @query_method = options.fetch(:all) 
-          @client = Savon.client do
-            wsdl @wsdl_path
-            wsse_auth [options[:username], options[:password]] if options[:username] && options[:password]
-          end
+          @query_method = options.fetch(:all)
+          
+          savon_ops = { wsdl: @wsdl_path }
+          savon_ops.merge!(wsse_auth: [options[:username], options[:password]]) if options[:username] && options[:password]
+          
+          @client = Savon.client(savon_ops)
           @options = options
           @expose_client = @options.fetch(:enable_mock_setters, false)
         end
