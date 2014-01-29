@@ -5,9 +5,7 @@ gemspec
 
 group :test do
   gem 'rspec',          '~> 2.13.0',    :require => %w(spec)
-  gem 'rake'
-  
-  gem 'bundler',        '~> 1.3.5'
+
   gem 'ParseTree',                  :require => 'parse_tree'
   gem 'dm-sweatshop'
   gem 'dm-sqlite-adapter'
@@ -19,5 +17,5 @@ group :test do
 
   gem 'savon', '~> 2.2.0'
   gem "mocha", '~> 0.13', :require => false
-  gem 'soap4r', :git => 'git://github.com/felipec/soap4r.git'
+  gem "soap4r", "~> 1.5.8"
 end
