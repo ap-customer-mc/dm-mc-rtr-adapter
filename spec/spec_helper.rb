@@ -4,7 +4,7 @@ require 'pathname'
 # Support running specs with 'rake spec' and 'spec'
 $LOAD_PATH.unshift('lib') unless $LOAD_PATH.include?('lib')
 
-require 'dm-soap-adapter'
+require 'dm-mc-rtr-adapter'
 require "savon/mock/spec_helper"
 require 'dm-core/spec/shared/adapter_spec'
 

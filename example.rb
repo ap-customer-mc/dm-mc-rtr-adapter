@@ -9,7 +9,7 @@ $LOAD_PATH.unshift(xtra) unless $LOAD_PATH.include?(xtra)
 
 require 'rubygems'
 require 'dm-core'
-require 'dm-soap-adapter'
+require 'dm-mc-rtr-adapter'
 
 class Account
   include SoapAdapter::Resource

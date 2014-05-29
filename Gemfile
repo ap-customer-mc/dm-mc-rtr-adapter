@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in dm-soap-adapter.gemspec
+# Specify your gem's dependencies in dm-mc-rtr-adapter.gemspec
 gemspec
 
 group :test do
