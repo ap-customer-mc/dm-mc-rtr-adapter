@@ -2,7 +2,7 @@
 
 Add this line to your application's Gemfile:
 
-    gem 'dm-soap-adapter'
+    gem 'dm-mc-rtr-adapter'
 
 And then execute:
 
@@ -10,11 +10,11 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install dm-soap-adapter
+    $ gem install dm-mc-rtr-adapter
 
 ## Usage
 
-To test the dm-soap-adapter:
+To test the dm-mc-rtr-adapter:
 
     $ rspec spec
   
