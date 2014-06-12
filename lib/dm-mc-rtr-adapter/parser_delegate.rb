@@ -7,12 +7,13 @@ module DataMapper
         def parse_collection(array, model)
           DataMapper.logger.debug("parse_collection is about to parse\n #{array.inspect}")
           array.collect do |instance|
-            parse_record(instance, model)
+           parse_record(instance, model)
           end
         end
         
         def parse_record(hash,model)
           field_to_property = make_field_to_property_hash(model)
+          hash[:id] = UUID.new.to_s
           DataMapper.logger.debug("parse_record is converting #{hash.inspect} for model #{model}")
           record = record_from_hash(hash, field_to_property)
           DataMapper.logger.debug("Record made from hash is #{record}")
@@ -25,19 +26,18 @@ module DataMapper
             DataMapper.logger.debug("#{field} = #{value}")
             name = field.to_s
             property = field_to_property[name]
-
             if property.nil?
               property = field_to_property[name.to_sym]
             end
             
             if property.instance_of? DataMapper::Property::Object
-              raise "Array properties are not yet supported!"
+              #raise "Array properties are not yet supported!"
+              record[name] = value
             else
               next unless property
               record[name] = property.typecast(value)
             end
           end
-
           record
         end
 

@@ -21,7 +21,6 @@ module DataMapper
         end
     
         def get(keys)
-      
           response = connection.call_get(keys)
 
           rescue SoapError => e
@@ -46,12 +45,15 @@ module DataMapper
         def read(query)
           @log.debug("Read #{query.inspect} and its model is #{query.model.inspect}")
           model = query.model
-          soap_query = build_query(query)
           begin
-            
-            response = connection.call_query(soap_query)
-            @log.debug("response was #{response.inspect}")
+            response = connection.call_query(@options[:payload])
             body = response.body
+            body = body[@options[:selector]]
+            if @options[:collection_selector]
+              body = body[@options[:collection_selector].to_sym]
+            else
+              body = [body]
+            end
             return [] unless body
             return parse_collection(body, model)
           rescue SoapError => e
