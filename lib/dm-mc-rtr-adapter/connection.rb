@@ -7,7 +7,8 @@ module DataMapper
       class Connection
 
         def initialize(options)
-          Rails.logger.debug("xml payload #{options.fetch(:payload)}")
+          #Datamapper.logger.debug("xml payload #{options.fetch(:payload)}")
+          p options
           @wsdl_path = options.fetch(:wsdl_store)
           @ssl_cert = options.fetch(:ssl_cert)
           @ssl_key = options.fetch(:ssl_key)
