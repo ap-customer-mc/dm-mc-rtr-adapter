@@ -7,6 +7,8 @@ module DataMapper
       class Connection
 
         def initialize(options)
+          p "these are the options"
+          p options
           @wsdl_path = options.fetch(:wsdl_store)
           @ssl_cert = options.fetch(:ssl_cert)
           @ssl_key = options.fetch(:ssl_key)
@@ -15,6 +17,8 @@ module DataMapper
           @update_method = options.fetch(:update) if options[:update]
           @delete_method = options.fetch(:delete) if options[:delete]
           # So... this would be "query" and we stuff everything here and hope the other side knows how to handle it
+          p "this is the options fetch of all"
+          p options.fetch(:all)
           @query_method = options.fetch(:all)
           
           savon_ops = { wsdl: "#{Rails.root}#{@wsdl_path}", ssl_cert_key_file: "#{Rails.root}/#{@ssl_key}", ssl_cert_file: "#{Rails.root}/#{@ssl_cert}", logger: Rails.logger, log_level: :debug, log: true,  pretty_print_xml: true}
@@ -60,8 +64,8 @@ module DataMapper
           call_service(@read_method, message: id)
         end
     
-        def call_query(query)
-          call_service(@query_method, xml: query)
+        def call_query(method, query)
+          call_service(method, xml: query)
         end
         
         def call_service(operation, objects)

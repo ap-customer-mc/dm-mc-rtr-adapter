@@ -8,6 +8,8 @@ module DataMapper
         def initialize(name, options)
           super
           @options = options
+          p "these are the options"
+          p @options
           @expose_connection = @options.fetch(:enable_mock_setters, false)
           initialize_logger
         end
@@ -46,7 +48,8 @@ module DataMapper
           @log.debug("Read #{query.inspect} and its model is #{query.model.inspect}")
           model = query.model
           begin
-            response = connection.call_query(@options[:payload])
+            response = connection.call_query(@options[:all], @options[:payload])
+
             body = response.body
             body = body[@options[:selector]]
             if @options[:collection_selector]
