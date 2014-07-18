@@ -14,9 +14,9 @@ module DataMapper
         def parse_record(hash,model)
           field_to_property = make_field_to_property_hash(model)
           hash[:id] = UUID.new.to_s
-          DataMapper.logger.debug("parse_record is converting #{hash.inspect} for model #{model}")
+          #logger.debug("parse_record is converting #{hash.inspect} for model #{model}")
           record = record_from_hash(hash, field_to_property)
-          DataMapper.logger.debug("Record made from hash is #{record}")
+          #logger.debug("Record made from hash is #{record}")
           record
         end
 
