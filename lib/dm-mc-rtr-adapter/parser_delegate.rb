@@ -13,7 +13,7 @@ module DataMapper
         
         def parse_record(hash,model)
           field_to_property = make_field_to_property_hash(model)
-          hash[:id] = UUID.new.to_s
+          hash[:id] = SecureRandom.uuid
           #logger.debug("parse_record is converting #{hash.inspect} for model #{model}")
           record = record_from_hash(hash, field_to_property)
           #logger.debug("Record made from hash is #{record}")
