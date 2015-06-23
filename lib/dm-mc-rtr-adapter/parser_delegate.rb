@@ -3,14 +3,14 @@ module DataMapper
   module Adapters
     module Soap
       module ParserDelegate
-        
+
         def parse_collection(array, model)
           DataMapper.logger.debug("parse_collection is about to parse\n #{array.inspect}")
-          array.collect do |instance|
+          Array.wrap(array).collect do |instance|
            parse_record(instance, model)
           end
         end
-        
+
         def parse_record(hash,model)
           field_to_property = make_field_to_property_hash(model)
           hash[:id] = SecureRandom.uuid
@@ -29,7 +29,7 @@ module DataMapper
             if property.nil?
               property = field_to_property[name.to_sym]
             end
-            
+
             if property.instance_of? DataMapper::Property::Object
               #raise "Array properties are not yet supported!"
               record[name] = value
@@ -44,7 +44,7 @@ module DataMapper
         def make_field_to_property_hash(model)
           Hash[ model.properties(model.default_repository_name).map { |p| [ p.field, p ] } ]
         end
-        
+
         def resource_name(model)
           model.respond_to?(:storage_name) ? model.storage_name(repository_name) : model
         end
