@@ -39,19 +39,19 @@ end
 
 module Savon
   class Options
-    def ssl_pkcs12_file(ssl_pkcs12_file)
-      @options[:ssl_pkcs12_file] = ssl_pkcs12_file
+    def ssl_keystore_file(ssl_pkcs12_file)
+      @options[:ssl_keystore_file] = ssl_pkcs12_file
     end
 
-    def ssl_pkcs12_password (ssl_pkcs12_password)
-      @options[:ssl_pkcs12_password] = ssl_pkcs12_password
+    def ssl_keystore_password (ssl_pkcs12_password)
+      @options[:ssl_keystore_password] = ssl_pkcs12_password
     end
   end
 
   class HTTPRequest
     def configure_ssl
-      if @globals.include? :ssl_pkcs12_file
-        @http_request.auth.ssl.plcs_file(@globals[:ssl_pkcs12_file], @globals[:ssl_pkcs12_password])
+      if @globals.include? :ssl_keystore_file
+        @http_request.auth.ssl.plcs_file(@globals[:ssl_keystore_file], @globals[:ssl_keystore_password])
         @http_request.auth.ssl.verify_mode = :none
       else
         raise ArgumentError, "PKCS12 SSL keystore not set"
@@ -66,8 +66,8 @@ module DataMapper
       class Connection
         def initialize(options)
           @wsdl_path = options.fetch(:wsdl_store)
-          @ssl_pkcs12_file = options.fetch(:ssl_pkcs12_file)
-          @ssl_pkcs12_password = options.fetch(:ssl_pkcs12_password)
+          @ssl_keystore_file = options.fetch(:ssl_keystore_file)
+          @ssl_keystore_password = options.fetch(:ssl_keystore_password)
           @create_method = options.fetch(:create) if options[:create]
           @read_method = options.fetch(:read) if options[:read]# This maps to get a single object
           @update_method = options.fetch(:update) if options[:update]
@@ -75,7 +75,7 @@ module DataMapper
           # So... this would be "query" and we stuff everything here and hope the other side knows how to handle it
           @query_method = options.fetch(:all)
 
-          savon_ops = { wsdl: "#{Rails.root}#{@wsdl_path}", ssl_pkcs12_file: "#{Rails.root}#{@ssl_pkcs12_file}", ssl_pkcs12_password: @ssl_pkcs12_password, logger: Rails.logger, log_level: :info, log: true,  pretty_print_xml: true}
+          savon_ops = { wsdl: "#{Rails.root}#{@wsdl_path}", ssl_keystore_file: "#{Rails.root}#{@ssl_keystore_file}", ssl_keystore_password: @ssl_keystore_password, logger: Rails.logger, log_level: :info, log: true,  pretty_print_xml: true}
 
           auth_ops = {}
           if options[:username] && options[:password]
