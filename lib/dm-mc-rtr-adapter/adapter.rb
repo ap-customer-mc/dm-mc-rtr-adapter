@@ -48,6 +48,7 @@ module DataMapper
           begin
             response = connection.call_query(@options[:all], @options[:payload])
             body = response.body
+            DataMapper.logger.debug("Response Body: #{body}")
             body = body[@options[:selector]]
             if @options[:collection_selector]
               body = body[@options[:collection_selector].to_sym]
