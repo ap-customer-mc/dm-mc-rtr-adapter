@@ -75,7 +75,7 @@ module DataMapper
           # So... this would be "query" and we stuff everything here and hope the other side knows how to handle it
           @query_method = options.fetch(:all)
 
-          savon_ops = { wsdl: "#{Rails.root}#{@wsdl_path}", ssl_keystore_file: "#{Rails.root}#{@ssl_keystore_file}", ssl_keystore_password: @ssl_keystore_password, logger: Rails.logger, log_level: :info, log: true,  pretty_print_xml: true}
+          savon_ops = { wsdl: "#{Rails.root}#{@wsdl_path}", ssl_keystore_file: "#{Rails.root}#{@ssl_keystore_file}", ssl_keystore_password: @ssl_keystore_password, logger: Rails.logger, log_level: :debug, log: true,  pretty_print_xml: true}
 
           auth_ops = {}
           if options[:username] && options[:password]
@@ -126,6 +126,7 @@ module DataMapper
         def call_service(operation, objects)
           DataMapper.logger.debug( "calling client #{operation.to_sym} with #{objects.inspect}")
           response = @client.call(operation.to_sym, objects)
+          DataMapper.logger.debug("Raw Response: #{response}")
         end
 
       end
