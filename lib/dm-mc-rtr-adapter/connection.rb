@@ -126,6 +126,7 @@ module DataMapper
         def call_service(operation, objects)
           DataMapper.logger.debug( "calling client #{operation.to_sym} with #{objects.inspect}")
           response = @client.call(operation.to_sym, objects)
+          DataMapper.logger.debug("Raw Response: #{response}")
         end
 
       end
